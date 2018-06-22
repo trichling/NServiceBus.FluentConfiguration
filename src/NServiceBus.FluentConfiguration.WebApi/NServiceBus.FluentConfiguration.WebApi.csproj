@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <VersionPrefix>1.0.2</VersionPrefix>
+    <Title>A fluent interface for configuring an NServiceBus endpoint within a .NET Core WebApi. </Title>
+    <RepositoryUrl>https://github.com/trichling/NServiceBus.FluentConfiguration</RepositoryUrl>
+    <Authors>Tobias Richling</Authors>
+    <PackageTags>NServiceBus;Configuration;Fluent;.NET Core;WebApi</PackageTags>
+  </PropertyGroup>
   </PropertyGroup>
 
   <ItemGroup>
@@ -11,8 +17,6 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.1.1" />
     <PackageReference Include="NServiceBus" Version="7.0.1" />
-    <PackageReference Include="NServiceBus.Persistence.Sql" Version="4.1.1" />
-    <PackageReference Include="NServiceBus.SqlServer" Version="4.1.0" />
   </ItemGroup>
 
 </Project>

@@ -2,6 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <VersionPrefix>1.0.1</VersionPrefix>
+    <Title>A fluent interface for configuring an NServiceBus endpoint. </Title>
+    <RepositoryUrl>https://github.com/trichling/NServiceBus.FluentConfiguration</RepositoryUrl>
+    <Authors>Tobias Richling</Authors>
+    <PackageTags>NServiceBus;Configuration;Fluent;.NET Core</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>
