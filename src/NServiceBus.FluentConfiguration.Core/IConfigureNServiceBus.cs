@@ -1,6 +1,6 @@
 using System;
 
-namespace NServiceBus.Configuration.WebApi
+namespace NServiceBus.FluentConfiguration.Core
 {
 
     public interface IConfigureNServiceBus 

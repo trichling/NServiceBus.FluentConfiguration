@@ -4,8 +4,9 @@ using NServiceBus.Transport;
 using NServiceBus.Transport.SQLServer;
 using NServiceBus.Persistence.Sql;
 using System.Data.SqlClient;
+using NServiceBus.FluentConfiguration.Core;
 
-namespace NServiceBus.Configuration.WebApi
+namespace NServiceBus.FluentConfiguration.WebApi
 {
 
     public class Test
@@ -36,6 +37,7 @@ namespace NServiceBus.Configuration.WebApi
                         });
                     
                 })
+                .ManageEndpoint()
                 .Start();
         }
 

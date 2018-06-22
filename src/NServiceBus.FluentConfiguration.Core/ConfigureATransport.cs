@@ -1,17 +1,17 @@
 using System;
 using NServiceBus.Transport;
 
-namespace NServiceBus.Configuration.WebApi
+namespace NServiceBus.FluentConfiguration.Core
 {
     public class ConfigureATransport<T> : IConfigureATransport<T> where T : TransportDefinition, new()
     {
         private readonly IConfigureAnEndpoint configureEndpoint;
-        private Action<TransportExtensions<T>> transportConfigurationAction;
 
         public ConfigureATransport(IConfigureAnEndpoint configureEndpoint, Action<TransportExtensions<T>> transportConfigurationAction)
         {
             Transport = configureEndpoint.Configuration.UseTransport<T>();
             transportConfigurationAction(Transport);
+            this.configureEndpoint = configureEndpoint;
         }
 
         public ConfigureATransport(IConfigureAnEndpoint configureEndpoint, IDefaultTransportConfiguration<T> defaultConfiguration, Action<TransportExtensions<T>> transportConfigurationAction)

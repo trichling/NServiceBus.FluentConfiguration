@@ -1,6 +1,6 @@
 using NServiceBus.Persistence;
 
-namespace NServiceBus.Configuration.WebApi
+namespace NServiceBus.FluentConfiguration.Core
 {
     public interface IDefaultPersistenceConfiguration<T> where T : PersistenceDefinition
     {

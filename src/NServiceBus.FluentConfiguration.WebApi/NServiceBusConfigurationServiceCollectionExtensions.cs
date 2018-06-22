@@ -1,4 +1,5 @@
-using NServiceBus.Configuration.WebApi;
+using NServiceBus.FluentConfiguration.Core;
+using NServiceBus.FluentConfiguration.WebApi;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
@@ -8,7 +9,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
         public static IConfigureNServiceBus AddNServiceBus(this IServiceCollection services) 
         {
-            return new ConfigureNServiceBus(services);
+            return new NServiceBus.FluentConfiguration.WebApi.ConfigureNServiceBus(services);
         }
 
     }

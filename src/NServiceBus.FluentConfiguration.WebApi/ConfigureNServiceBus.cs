@@ -1,7 +1,8 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
+using NServiceBus.FluentConfiguration.Core;
 
-namespace NServiceBus.Configuration.WebApi
+namespace NServiceBus.FluentConfiguration.WebApi
 {
 
     public class ConfigureNServiceBus : IConfigureNServiceBus

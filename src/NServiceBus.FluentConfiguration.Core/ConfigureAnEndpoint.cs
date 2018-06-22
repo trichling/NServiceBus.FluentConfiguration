@@ -1,29 +1,25 @@
 using System;
-using Microsoft.Extensions.DependencyInjection;
 using NServiceBus.Persistence;
 using NServiceBus.Transport;
 
-namespace NServiceBus.Configuration.WebApi
+namespace NServiceBus.FluentConfiguration.Core
 {
 
     public class ConfigureAnEndpoint : IConfigureAnEndpoint
     {
-        private readonly IServiceCollection services;
         private readonly string name;
         private readonly IDefaultEndpointConfiguration defaultConfiguration;
         private readonly Action<EndpointConfiguration> endpointConfigurationAction;
 
-        public ConfigureAnEndpoint(IServiceCollection services, string name)
+        public ConfigureAnEndpoint(string name)
         {
-            this.services = services;
             this.name = name;
 
                 Configuration = new EndpointConfiguration(name);
-            }
+        }
 
-        public ConfigureAnEndpoint(IServiceCollection services, string name, Action<EndpointConfiguration> endpointConfigurationAction)
+        public ConfigureAnEndpoint(string name, Action<EndpointConfiguration> endpointConfigurationAction)
         {
-            this.services = services;
             this.name = name;
             this.endpointConfigurationAction = endpointConfigurationAction;
 
@@ -31,9 +27,8 @@ namespace NServiceBus.Configuration.WebApi
             endpointConfigurationAction(Configuration);
         }
 
-        public ConfigureAnEndpoint(IServiceCollection services, string name, IDefaultEndpointConfiguration defaultConfiguration, Action<EndpointConfiguration> endpointConfigurationAction)
+        public ConfigureAnEndpoint(string name, IDefaultEndpointConfiguration defaultConfiguration, Action<EndpointConfiguration> endpointConfigurationAction)
         {
-            this.services = services;
             this.name = name;
             this.defaultConfiguration = defaultConfiguration;
             this.endpointConfigurationAction = endpointConfigurationAction;
@@ -74,10 +69,9 @@ namespace NServiceBus.Configuration.WebApi
             return this;
         }
 
-        public void Start()
+        public virtual IManageAnEndpoint ManageEndpoint()
         {
-            var instance = Endpoint.Start(Configuration).GetAwaiter().GetResult();
-            services.AddSingleton<IMessageSession>(instance);
+            return new ManageAnEndpoint(Configuration);
         }
     }
 

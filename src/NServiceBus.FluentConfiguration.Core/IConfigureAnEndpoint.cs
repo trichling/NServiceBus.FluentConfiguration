@@ -2,7 +2,7 @@ using System;
 using NServiceBus.Persistence;
 using NServiceBus.Transport;
 
-namespace NServiceBus.Configuration.WebApi
+namespace NServiceBus.FluentConfiguration.Core
 {
 
     public interface IConfigureAnEndpoint
@@ -17,7 +17,8 @@ namespace NServiceBus.Configuration.WebApi
         IConfigureAnEndpoint WithPersistence<T>(Action<PersistenceExtensions<T>> persistenceConfigurationAction) where T : PersistenceDefinition;
         IConfigureAnEndpoint WithPersistence<T, TDefault>(Action<PersistenceExtensions<T>> persistenceConfigurationAction) where T : PersistenceDefinition where TDefault : IDefaultPersistenceConfiguration<T>, new();
 
-        void Start();
+        IManageAnEndpoint ManageEndpoint();
 
+        
     }
 }

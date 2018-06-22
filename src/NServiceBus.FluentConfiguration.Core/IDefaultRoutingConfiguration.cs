@@ -1,7 +1,7 @@
 using System;
 using NServiceBus.Transport;
 
-namespace NServiceBus.Configuration.WebApi
+namespace NServiceBus.FluentConfiguration.Core
 {
     public interface IDefaultRoutingConfiguration<T> where T : TransportDefinition, new()
     {
