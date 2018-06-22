@@ -10,15 +10,17 @@ namespace NServiceBus.FluentConfiguration.Core
 
         EndpointConfiguration Configuration { get;  }
 
+        IConfigureATransport<T> WithTransport<T>() where T : TransportDefinition, new();
+        IConfigureATransport<T> WithTransport<T, TDefault>() where T : TransportDefinition, new() where TDefault : IDefaultTransportConfiguration<T>, new();
         IConfigureATransport<T> WithTransport<T>(Action<TransportExtensions<T>> transportConfigurationAction) where T : TransportDefinition, new();
-
         IConfigureATransport<T> WithTransport<T, TDefault>(Action<TransportExtensions<T>> transportConfigurationAction) where T : TransportDefinition, new() where TDefault : IDefaultTransportConfiguration<T>, new();
 
+
+        IConfigureAnEndpoint WithPersistence<T>() where T : PersistenceDefinition;
+        IConfigureAnEndpoint WithPersistence<T, TDefault>() where T : PersistenceDefinition where TDefault : IDefaultPersistenceConfiguration<T>, new();
         IConfigureAnEndpoint WithPersistence<T>(Action<PersistenceExtensions<T>> persistenceConfigurationAction) where T : PersistenceDefinition;
         IConfigureAnEndpoint WithPersistence<T, TDefault>(Action<PersistenceExtensions<T>> persistenceConfigurationAction) where T : PersistenceDefinition where TDefault : IDefaultPersistenceConfiguration<T>, new();
 
         IManageAnEndpoint ManageEndpoint();
-
-        
     }
 }

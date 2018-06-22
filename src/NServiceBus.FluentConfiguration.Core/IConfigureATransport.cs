@@ -9,6 +9,7 @@ namespace NServiceBus.FluentConfiguration.Core
 
         TransportExtensions<T> Transport { get;  }
 
+        IConfigureAnEndpoint WithRouting<TDefault>() where TDefault : IDefaultRoutingConfiguration<T>, new();
         IConfigureAnEndpoint WithRouting(Action<RoutingSettings<T>> routingConfigurationAction);
         IConfigureAnEndpoint WithRouting<TDefault>(Action<RoutingSettings<T>> routingConfigurationAction) where TDefault : IDefaultRoutingConfiguration<T>, new();
 

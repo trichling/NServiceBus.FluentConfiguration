@@ -24,6 +24,15 @@ namespace NServiceBus.FluentConfiguration.Core
 
         public TransportExtensions<T> Transport { get; private set; }
 
+        public IConfigureAnEndpoint WithRouting<TDefault>() where TDefault : IDefaultRoutingConfiguration<T>, new()
+        {
+            var routing = Transport.Routing();
+            var defaultConfiguration = new TDefault();
+            defaultConfiguration.ConfigureRouting(routing);
+            
+            return configureEndpoint;
+        }
+
         public IConfigureAnEndpoint WithRouting(Action<RoutingSettings<T>> routingConfigurationAction)
         {
             var routing = Transport.Routing();
@@ -42,7 +51,7 @@ namespace NServiceBus.FluentConfiguration.Core
             return configureEndpoint;
         }
 
-
+        
     }
 
 }

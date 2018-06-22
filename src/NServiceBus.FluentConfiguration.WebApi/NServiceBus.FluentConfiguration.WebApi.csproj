@@ -8,7 +8,6 @@
     <Authors>Tobias Richling</Authors>
     <PackageTags>NServiceBus;Configuration;Fluent;.NET Core;WebApi</PackageTags>
   </PropertyGroup>
-  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\NServiceBus.FluentConfiguration.Core\NServiceBus.FluentConfiguration.Core.csproj" />
