@@ -1,4 +1,8 @@
 # NServiceBus.FluentConfiguration
+
+_[![NuGet version](https://img.shields.io/nuget/v/NServiceBus.FluentConfiguration.Core.svg?style=flat)](https://www.nuget.org/packages/NServiceBus.FluentConfiguration.Core)_
+_[![NuGet version](https://img.shields.io/nuget/v/NServiceBus.FluentConfiguration.WebApi.svg?style=flat)](https://www.nuget.org/packages/NServiceBus.FluentConfiguration.WebApi)_
+
 Provides a fluent API to configure NServiceBus endpoints
 
 Configuring an NServiceBus endpoint hosted in a .NET Core API happens in ConfigureServices, but the code you have to write for this does not fit nicely into the serives.AddNServiceBus schema of .NET Core. Instead one has to write code that looks alien to .NET Core WebApi.
