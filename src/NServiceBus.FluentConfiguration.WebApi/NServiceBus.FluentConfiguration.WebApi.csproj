@@ -5,7 +5,7 @@
     <VersionPrefix>1.0.4</VersionPrefix>
     <Title>A fluent interface for configuring an NServiceBus endpoint within a .NET Core WebApi. </Title>
     <Description>Provides you with a fluent interface for configuring an NServiceBus endpoint in .NET Core WebApi. It uses IServiceCollection as a starting point and guides the developer through the configuration process.</Description>
-    <RepositoryUrl>https://github.com/trichling/NServiceBus.FluentConfiguration</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/trichling/NServiceBus.FluentConfiguration</PackageProjectUrl>
     <Authors>Tobias Richling</Authors>
     <PackageTags>NServiceBus;Configuration;Fluent;.NET Core;WebApi</PackageTags>
   </PropertyGroup>
