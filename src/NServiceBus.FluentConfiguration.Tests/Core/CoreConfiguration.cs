@@ -10,8 +10,6 @@ namespace NServiceBus.FluentConfiguration.Tests
         public void CanStartSimpleEndpoint() 
         {
             var endpointName = "Test";
-            var schema = "mySchema";
-            var connectionString = "";
 
             var endpoint = new ConfigureNServiceBus()
                 .WithEndpoint(endpointName)

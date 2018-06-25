@@ -16,8 +16,6 @@ namespace NServiceBus.FluentConfiguration.Tests
             IServiceCollection services = new ServiceCollection(); // null; //new Microsoft.Extensions.DependencyInjection.ServiceCollection();
 
             var endpointName = "Test";
-            var schema = "mySchema";
-            var connectionString = "";
 
             services.AddNServiceBus()
                 .WithEndpoint<DefaultEndpointConfiguration>(endpointName)
