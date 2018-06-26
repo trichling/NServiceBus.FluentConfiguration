@@ -10,6 +10,7 @@ namespace NServiceBus.FluentConfiguration.Tests
         {
             DefaultTransportConfiguration.ConfigureTransportCalled = false;
             DefaultPersistenceConfiguration.ConfigurePersistenceCalled = false;
+            DefaultConventinosConfiguration.ConfigurePersistenceCalled = false;
         }
 
         [Fact]
@@ -75,7 +76,7 @@ namespace NServiceBus.FluentConfiguration.Tests
         }
 
         [Fact]
-        public void onfigureAnEndpoint_WithPersistence_ProvidingDefaultConfiguration_DefaultConfigurationIsApplied()
+        public void ConfigureAnEndpoint_WithPersistence_ProvidingDefaultConfiguration_DefaultConfigurationIsApplied()
         {
             var configurePersistence = new ConfigureNServiceBus().WithEndpoint("Test").WithPersistence<LearningPersistence, DefaultPersistenceConfiguration>();
 
@@ -90,6 +91,42 @@ namespace NServiceBus.FluentConfiguration.Tests
 
             Assert.True(DefaultPersistenceConfiguration.ConfigurePersistenceCalled);
             Assert.True(configurationCallbackCalled);
+        }
+
+        [Fact]
+        public void ConfigureAnEndpoint_WithConventions_ProvidingConfigurationCallback_ConfigurationCallbackIsCalled()
+        {
+            var configurationCallbackCalled = false;
+            var configurePersistence = new ConfigureNServiceBus().WithEndpoint("Test").WithConventions(cfg => { configurationCallbackCalled = true; });
+
+            Assert.True(configurationCallbackCalled);
+        }
+
+        [Fact]
+        public void ConfigureAnEndpoint_WithConventions_ProvidingDefaultConfiguration_DefaultConfigurationIsApplied()
+        {
+            var configurePersistence = new ConfigureNServiceBus().WithEndpoint("Test").WithConventions<DefaultConventinosConfiguration>();
+
+            Assert.True(DefaultConventinosConfiguration.ConfigurePersistenceCalled);
+        }
+
+        [Fact]
+        public void ConfigureAnEndpoint_WithConventions_ProvidingDefaultConfigurationAndConfigurationCallback_DefaultConfigurationIsAppliedAndConfigurationCallbackIsCalled()
+        {
+            var configurationCallbackCalled = false;
+            var configurePersistence = new ConfigureNServiceBus().WithEndpoint("Test").WithConventions<DefaultConventinosConfiguration>(cfg => { configurationCallbackCalled = true ;});
+
+            Assert.True(DefaultConventinosConfiguration.ConfigurePersistenceCalled);
+        }
+
+        private class DefaultConventinosConfiguration : IDefaultConventionsConfiguration
+        {
+            public static bool ConfigurePersistenceCalled = false;
+
+            public void ConfigureConventions(ConventionsBuilder conventionsConfiguration)
+            {
+                ConfigurePersistenceCalled = true;
+            }
         }
 
         private class DefaultPersistenceConfiguration : IDefaultPersistenceConfiguration<LearningPersistence>
@@ -109,6 +146,8 @@ namespace NServiceBus.FluentConfiguration.Tests
 
             Assert.IsAssignableFrom(typeof(IManageAnEndpoint), manageEndpoint);
         }
+
+       
     }
   
 }

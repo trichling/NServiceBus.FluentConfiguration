@@ -96,6 +96,33 @@ namespace NServiceBus.FluentConfiguration.Core
             return this;
         }
 
+        public IConfigureAnEndpoint WithConventions(Action<ConventionsBuilder> conventionConfigurationAction)
+        {
+            var conventions = Configuration.Conventions();
+            conventionConfigurationAction(conventions);
+            
+            return this;
+        }
+
+        public IConfigureAnEndpoint WithConventions<TDefault>() where TDefault : IDefaultConventionsConfiguration, new()
+        {
+            var conventions = Configuration.Conventions();
+            var defaultConfiguration = new TDefault();
+            defaultConfiguration.ConfigureConventions(conventions);
+            
+            return this;
+        }
+
+        public IConfigureAnEndpoint WithConventions<TDefault>(Action<ConventionsBuilder> conventionConfigurationAction) where TDefault : IDefaultConventionsConfiguration, new()
+        {
+            var conventions = Configuration.Conventions();
+            var defaultConfiguration = new TDefault();
+            defaultConfiguration.ConfigureConventions(conventions);
+            conventionConfigurationAction(conventions);
+
+            return this;
+        }
+
         public virtual IManageAnEndpoint ManageEndpoint()
         {
             return new ManageAnEndpoint(Configuration);

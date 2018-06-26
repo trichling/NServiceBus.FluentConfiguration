@@ -21,6 +21,10 @@ namespace NServiceBus.FluentConfiguration.Core
         IConfigureAnEndpoint WithPersistence<T>(Action<PersistenceExtensions<T>> persistenceConfigurationAction) where T : PersistenceDefinition;
         IConfigureAnEndpoint WithPersistence<T, TDefault>(Action<PersistenceExtensions<T>> persistenceConfigurationAction) where T : PersistenceDefinition where TDefault : IDefaultPersistenceConfiguration<T>, new();
 
+        IConfigureAnEndpoint WithConventions(Action<ConventionsBuilder> conventionConfigurationAction);
+        IConfigureAnEndpoint WithConventions<TDefault>() where TDefault : IDefaultConventionsConfiguration, new();
+        IConfigureAnEndpoint WithConventions<TDefault>(Action<ConventionsBuilder> conventionConfigurationAction) where TDefault : IDefaultConventionsConfiguration, new();
+
         IManageAnEndpoint ManageEndpoint();
     }
 }
