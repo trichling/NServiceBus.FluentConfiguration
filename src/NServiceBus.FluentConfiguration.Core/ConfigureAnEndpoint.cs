@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using NServiceBus.ObjectBuilder;
+using NServiceBus.ObjectBuilder.Common;
 using NServiceBus.Persistence;
 using NServiceBus.Transport;
 
@@ -123,6 +126,11 @@ namespace NServiceBus.FluentConfiguration.Core
             return this;
         }
 
+        public IConfigureDependecyInjection WithDependencyInjection()
+        {
+            return new ConfigureDependencyInjection(this);
+        }
+
         public virtual IManageAnEndpoint ManageEndpoint()
         {
             return new ManageAnEndpoint(Configuration);
@@ -130,5 +138,7 @@ namespace NServiceBus.FluentConfiguration.Core
 
        
     }
+
+    
 
 }

@@ -1,4 +1,5 @@
 using System;
+using NServiceBus.ObjectBuilder;
 using NServiceBus.Persistence;
 using NServiceBus.Transport;
 
@@ -24,6 +25,8 @@ namespace NServiceBus.FluentConfiguration.Core
         IConfigureAnEndpoint WithConventions(Action<ConventionsBuilder> conventionConfigurationAction);
         IConfigureAnEndpoint WithConventions<TDefault>() where TDefault : IDefaultConventionsConfiguration, new();
         IConfigureAnEndpoint WithConventions<TDefault>(Action<ConventionsBuilder> conventionConfigurationAction) where TDefault : IDefaultConventionsConfiguration, new();
+
+        IConfigureDependecyInjection WithDependencyInjection();
 
         IManageAnEndpoint ManageEndpoint();
     }
