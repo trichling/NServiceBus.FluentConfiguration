@@ -1,4 +1,5 @@
 using System;
+using NServiceBus.FluentConfiguration.Core.Profiles;
 using NServiceBus.Persistence;
 using NServiceBus.Transport;
 
@@ -11,11 +12,16 @@ namespace NServiceBus.FluentConfiguration.Core
         private readonly IDefaultEndpointConfiguration defaultConfiguration;
         private readonly Action<EndpointConfiguration> endpointConfigurationAction;
 
+        internal ConfigureAnEndpoint(EndpointConfiguration existingConfiguration)
+        {
+            Configuration = existingConfiguration;
+        }
+
         public ConfigureAnEndpoint(string name)
         {
             this.name = name;
 
-                Configuration = new EndpointConfiguration(name);
+            Configuration = new EndpointConfiguration(name);
         }
 
         public ConfigureAnEndpoint(string name, Action<EndpointConfiguration> endpointConfigurationAction)
@@ -39,6 +45,12 @@ namespace NServiceBus.FluentConfiguration.Core
         }
 
         public EndpointConfiguration Configuration { get; private set; }       
+
+        public IConfigureAnEndpoint WithProfile(IConfigurationProfile profile)
+        {
+            profile.ApplyTo(this);
+            return this;
+        }
 
         public IConfigureATransport<T> WithTransport<T>() where T : TransportDefinition, new()
         {
