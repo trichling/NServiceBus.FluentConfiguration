@@ -46,11 +46,33 @@ namespace NServiceBus.FluentConfiguration.Core
 
         public EndpointConfiguration Configuration { get; private set; }       
 
-        public IConfigureAnEndpoint WithProfile(IConfigurationProfile profile)
+        public IConfigureAnEndpoint WithConfiguration(IConfigurationProfile profile)
         {
             profile.ApplyTo(this);
             return this;
         }
+
+        public IConfigureAnEndpoint WithConfiguration(Action<EndpointConfiguration> endpointConfigurationAction)
+        {
+            endpointConfigurationAction(Configuration);
+            return this;
+        }
+
+        public IConfigureAnEndpoint WithConfiguration<TDefault>() where TDefault : IDefaultEndpointConfiguration, new()
+        {
+            var defaultConfiguration = new TDefault();
+            defaultConfiguration.ConfigureEndpoint(Configuration);
+            return this;
+        }
+
+        public IConfigureAnEndpoint WithConfiguration<TDefault>(Action<EndpointConfiguration> endpointConfigurationAction) where TDefault : IDefaultEndpointConfiguration, new()
+        {
+            var defaultConfiguration = new TDefault();
+            defaultConfiguration.ConfigureEndpoint(Configuration);
+            endpointConfigurationAction(Configuration);
+            return this;
+        }
+
 
         public IConfigureATransport<T> WithTransport<T>() where T : TransportDefinition, new()
         {

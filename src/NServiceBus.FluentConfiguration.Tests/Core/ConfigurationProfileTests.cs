@@ -11,7 +11,8 @@ namespace NServiceBus.FluentConfiguration.Tests
     {
         public ConfigurationProfileTests()
         {
-           
+           SqlServerTransportAndPersistenceProfile.IsApplied = false;
+           ConventionProfile.IsApplied = false;
         }
 
         [Fact]
@@ -19,11 +20,26 @@ namespace NServiceBus.FluentConfiguration.Tests
         {
             new ConfigureNServiceBus()
                     .WithEndpoint("Test")
-                    .WithProfile(new SqlServerTransportAndPersistenceProfile("datasource = blablabla"));
+                    .WithConfiguration(new SqlServerTransportAndPersistenceProfile("datasource = blablabla"));
+
+            Assert.True(SqlServerTransportAndPersistenceProfile.IsApplied);
+        }
+
+         [Fact]
+        public void ConfigurationProfile_CanApplyMultipleProfiles()
+        {
+            new ConfigureNServiceBus()
+                    .WithEndpoint("Test")
+                    .WithConfiguration(new SqlServerTransportAndPersistenceProfile("datasource = blablabla"))
+                    .WithConfiguration(new ConventionProfile());
+
+            Assert.True(SqlServerTransportAndPersistenceProfile.IsApplied);
+            Assert.True(ConventionProfile.IsApplied);
         }
 
         private class SqlServerTransportAndPersistenceProfile : IConfigurationProfile
         {
+            public static bool IsApplied = false;
             private readonly string connectionString;
 
             public SqlServerTransportAndPersistenceProfile(string connectionString)
@@ -33,12 +49,26 @@ namespace NServiceBus.FluentConfiguration.Tests
 
             public void ApplyTo(IConfigureAnEndpoint configuration)
             {
+                IsApplied = true;
                 configuration
                     .WithPersistence<SqlPersistence>(cfg => cfg.ConnectionBuilder(() => new SqlConnection(connectionString)))
                     .WithTransport<SqlServerTransport>(cfg => 
                     {
                         cfg.ConnectionString(connectionString);
                     });
+            }
+        }
+
+        private class ConventionProfile : IConfigurationProfile
+        {
+            public static bool IsApplied = false;
+
+            public void ApplyTo(IConfigureAnEndpoint endpointConfiguration)
+            {
+                IsApplied = true;
+                endpointConfiguration.WithConventions(cfg => {
+                    cfg.DefiningMessagesAs(c => c.Namespace.StartsWith("Contracts"));
+                });
             }
         }
     }

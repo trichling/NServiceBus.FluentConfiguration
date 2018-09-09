@@ -1,4 +1,7 @@
+using System.Data.SqlClient;
 using NServiceBus.FluentConfiguration.Core;
+using NServiceBus.FluentConfiguration.Core.Profiles;
+using NServiceBus.Persistence.Sql;
 using Xunit;
 
 namespace NServiceBus.FluentConfiguration.Tests
@@ -8,9 +11,50 @@ namespace NServiceBus.FluentConfiguration.Tests
     {
         public ConfigureAnEndpointTests()
         {
+            ExampleConfigurationProfile.IsApplied = false;
+            DefaultEndpointConfiguration.ConfigureEndpointCalled = false;
             DefaultTransportConfiguration.ConfigureTransportCalled = false;
             DefaultPersistenceConfiguration.ConfigurePersistenceCalled = false;
             DefaultConventinosConfiguration.ConfigurePersistenceCalled = false;
+        }
+
+        [Fact]
+        public void ConfigureNServiceBus_WithEndpoint_WithConfiguration_ProvidingConfigurationProfile_ConfigurationProfileIsApplied()
+        {
+            var configureEndpointWithConfiguration = new ConfigureNServiceBus().WithEndpoint("Test")
+                .WithConfiguration(new ExampleConfigurationProfile("some parameter"));
+
+            Assert.True(ExampleConfigurationProfile.IsApplied);
+        }
+
+        [Fact]
+        public void ConfigureNServiceBus_WithEndpoint_WithConfiguration_ProvidingDefaultConfiguration_DefaultConfigurationIsApplied()
+        {
+            var configureEndpointWithConfiguration = new ConfigureNServiceBus().WithEndpoint("Test")
+                .WithConfiguration<DefaultEndpointConfiguration>();
+
+            Assert.True(DefaultEndpointConfiguration.ConfigureEndpointCalled);
+        }
+
+        [Fact]
+        public void ConfigureNServiceBus_WithEndpoint_WithConfiguration_ProvidingConfigurationCallback_ConfigurationCallbackIsCalled()
+        {
+            var configurationCallbackCalled = false;
+            var configureEndpointWithConfiguration = new ConfigureNServiceBus().WithEndpoint("Test")
+                .WithConfiguration(cfg => configurationCallbackCalled = true);
+
+            Assert.True(configurationCallbackCalled);
+        }
+
+        [Fact]
+        public void ConfigureNServiceBus_WithEndpoint_WithConfiguration_ProvidingDefaultConfigurationAndConfigurationCallback_DefaultConfigurationIsAppliedAndConfigurationCallbackIsCalled()
+        {
+            var configurationCallbackCalled = false;
+            var configureEndpointWithConfiguration = new ConfigureNServiceBus().WithEndpoint("Test")
+                .WithConfiguration<DefaultEndpointConfiguration>(cfg => configurationCallbackCalled = true);
+
+            Assert.True(configurationCallbackCalled);
+            Assert.True(DefaultEndpointConfiguration.ConfigureEndpointCalled);
         }
 
         [Fact]
@@ -117,6 +161,33 @@ namespace NServiceBus.FluentConfiguration.Tests
             var configurePersistence = new ConfigureNServiceBus().WithEndpoint("Test").WithConventions<DefaultConventinosConfiguration>(cfg => { configurationCallbackCalled = true ;});
 
             Assert.True(DefaultConventinosConfiguration.ConfigurePersistenceCalled);
+        }
+
+        private class DefaultEndpointConfiguration : IDefaultEndpointConfiguration
+        {
+            public static bool ConfigureEndpointCalled = false;
+
+            public void ConfigureEndpoint(EndpointConfiguration endpointConfiguration)
+            {
+                ConfigureEndpointCalled = true;
+            }
+        }
+
+        private class ExampleConfigurationProfile : IEndpointConfigurationProfile
+        {
+            public static bool IsApplied = false;
+
+            public ExampleConfigurationProfile(string someParameter)
+            {
+            }
+
+            public void ApplyTo(IConfigureAnEndpoint configuration)
+            {
+                IsApplied = true;
+                configuration
+                    .WithPersistence<LearningPersistence>()
+                    .WithTransport<LearningTransport>();
+            }
         }
 
         private class DefaultConventinosConfiguration : IDefaultConventionsConfiguration
