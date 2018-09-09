@@ -46,7 +46,7 @@ namespace NServiceBus.FluentConfiguration.Core
 
         public EndpointConfiguration Configuration { get; private set; }       
 
-        public IConfigureAnEndpoint WithConfiguration(IConfigurationProfile profile)
+        public IConfigureAnEndpoint WithConfiguration(IEndpointConfigurationProfile profile)
         {
             profile.ApplyTo(this);
             return this;

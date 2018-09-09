@@ -37,7 +37,7 @@ namespace NServiceBus.FluentConfiguration.Tests
             Assert.True(ConventionProfile.IsApplied);
         }
 
-        private class SqlServerTransportAndPersistenceProfile : IConfigurationProfile
+        private class SqlServerTransportAndPersistenceProfile : IEndpointConfigurationProfile
         {
             public static bool IsApplied = false;
             private readonly string connectionString;
@@ -59,7 +59,7 @@ namespace NServiceBus.FluentConfiguration.Tests
             }
         }
 
-        private class ConventionProfile : IConfigurationProfile
+        private class ConventionProfile : IEndpointConfigurationProfile
         {
             public static bool IsApplied = false;
 
