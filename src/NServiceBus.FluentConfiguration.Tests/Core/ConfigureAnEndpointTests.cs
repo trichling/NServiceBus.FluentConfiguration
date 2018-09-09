@@ -161,6 +161,7 @@ namespace NServiceBus.FluentConfiguration.Tests
             var configurePersistence = new ConfigureNServiceBus().WithEndpoint("Test").WithConventions<DefaultConventinosConfiguration>(cfg => { configurationCallbackCalled = true ;});
 
             Assert.True(DefaultConventinosConfiguration.ConfigurePersistenceCalled);
+            Assert.True(configurationCallbackCalled);
         }
 
         private class DefaultEndpointConfiguration : IDefaultEndpointConfiguration
