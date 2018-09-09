@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <VersionPrefix>1.0.5</VersionPrefix>
+    <VersionPrefix>1.1.0</VersionPrefix>
     <Title>A fluent interface for configuring an NServiceBus endpoint. </Title>
     <Description>Provides you with a fluent interface for configuring an NServiceBus endpoint in .NET Core. It uses a class called ConfigureNServiceBus as a starting point and guides the developer through the configuration process.</Description>
     <PackageProjectUrl>https://github.com/trichling/NServiceBus.FluentConfiguration</PackageProjectUrl>
