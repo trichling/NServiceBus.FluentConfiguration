@@ -107,6 +107,50 @@ This configuration - if any - is applied first. Afterwards the given configurati
 
 The ManageEndpoint() method allows to start the endpoint. In case of NServiceBus.FluentConfiguration.WebApi the resulting IEndpointInstance is registered in the DI container as a singleton.
 
+# Configuration Profiles
+
+As of version 1.1.0 the library supports using configuration profiles by providing a class that implements ```IEndpointConfigurationProfile```. A profile is a part of an endpoint configuration. This allows for a more modular structure for your configurations. Say you use Sql Server transport & persistence in the same database. You can create a profile class for that:
+
+``` CSharp
+public class SqlServerTransportAndPersistenceProfile : IEndpointConfigurationProfile
+{
+    private readonly string connectionString;
+
+    public SqlServerTransportAndPersistenceProfile(string connectionString)
+    {
+        this.connectionString = connectionString;
+    }
+
+    public void ApplyTo(IConfigureAnEndpoint endpointConfiguration)
+    {
+        endpointConfiguration
+            .WithPersistence<SqlPersistence>(cfg =>
+            {
+                cfg.SqlDialect<SqlDialect.MsSqlServer>();
+                cfg.ConnectionBuilder(() => new SqlConnection(connectionString));
+            })
+            .WithTransport<SqlServerTransport>(cfg =>
+            {
+                cfg.ConnectionString(connectionString);
+                cfg.UseSchemaForQueue("error", "dbo");
+                cfg.UseSchemaForQueue("audit", "dbo");
+                cfg.Transactions(TransportTransactionMode.SendsAtomicWithReceive);
+            });
+    }
+}
+```
+
+A profile can be used by calling the ```WithConfiguration``` method on the ```IConfiguraAnEndpoint``` interface:
+
+``` CSharp
+ var endpointConfiguration = configuration.WithEndpoint(endpointName)
+    .WithConfiguration(new SqlServerTransportAndPersistenceProfile(connectionString))
+    .WithConfiguration(new DefaultConventionsProfile())
+    .WithConfiguration(new DefaultAuditAndMetricProfile())
+```
+
+The method can be called multiple times and can be mixed and matched with all other configuration options.
+
 # Known issues
 
 This project was started as to make life easier when configuring an NSercieBus endpoint within a WebApi. It is perfectly possible that not the whole configuration options that NServiceBus makes available are available through the fluent API. If you find something is missing, I am happy to receive pull requests.
