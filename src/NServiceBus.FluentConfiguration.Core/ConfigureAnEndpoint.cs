@@ -74,24 +74,24 @@ namespace NServiceBus.FluentConfiguration.Core
         }
 
 
-        public IConfigureATransport<T> WithTransport<T>() where T : TransportDefinition, new()
+        public IConfigureATransport<T> WithTransport<T>(T transport) where T : TransportDefinition
         {
-           return new ConfigureATransport<T>(this, t => {});       
+           return new ConfigureATransport<T>(this, transport, t => {});       
         }   
 
-        public IConfigureATransport<T> WithTransport<T, TDefault>() where T : TransportDefinition, new() where TDefault : IDefaultTransportConfiguration<T>, new()
+        public IConfigureATransport<T> WithTransport<T, TDefault>(T transport) where T : TransportDefinition where TDefault : IDefaultTransportConfiguration<T>, new()
         {
-           return new ConfigureATransport<T>(this, new TDefault(), t => {});       
+           return new ConfigureATransport<T>(this, transport, new TDefault(), t => {});       
         }
 
-        public IConfigureATransport<T> WithTransport<T>(Action<TransportExtensions<T>> transportConfigurationAction) where T : TransportDefinition, new()
+        public IConfigureATransport<T> WithTransport<T>(T transport, Action<T> transportConfigurationAction) where T : TransportDefinition
         {
-            return new ConfigureATransport<T>(this, transportConfigurationAction);                        
+            return new ConfigureATransport<T>(this, transport, transportConfigurationAction);                        
         }
 
-        public IConfigureATransport<T> WithTransport<T, TDefault>(Action<TransportExtensions<T>> transportConfigurationAction) where T : TransportDefinition, new() where TDefault : IDefaultTransportConfiguration<T>, new()
+        public IConfigureATransport<T> WithTransport<T, TDefault>(T transport, Action<T> transportConfigurationAction) where T : TransportDefinition where TDefault : IDefaultTransportConfiguration<T>, new()
         {
-           return new ConfigureATransport<T>(this, new TDefault(), transportConfigurationAction);       
+           return new ConfigureATransport<T>(this, transport, new TDefault(), transportConfigurationAction);       
         }
 
         public IConfigureAnEndpoint WithPersistence<T>() where T : PersistenceDefinition

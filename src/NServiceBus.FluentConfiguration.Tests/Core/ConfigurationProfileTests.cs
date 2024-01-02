@@ -52,9 +52,8 @@ namespace NServiceBus.FluentConfiguration.Tests
                 IsApplied = true;
                 configuration
                     .WithPersistence<SqlPersistence>(cfg => cfg.ConnectionBuilder(() => new SqlConnection(connectionString)))
-                    .WithTransport<SqlServerTransport>(cfg => 
+                    .WithTransport(new SqlServerTransport(connectionString), cfg => 
                     {
-                        cfg.ConnectionString(connectionString);
                     });
             }
         }

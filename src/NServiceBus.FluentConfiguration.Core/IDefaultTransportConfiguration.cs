@@ -3,10 +3,10 @@ using NServiceBus.Transport;
 
 namespace NServiceBus.FluentConfiguration.Core
 {
-    public interface IDefaultTransportConfiguration<T> where T : TransportDefinition, new()
+    public interface IDefaultTransportConfiguration<T> where T : TransportDefinition
     {
 
-        void ConfigureTransport(TransportExtensions<T> transport);
+        void ConfigureTransport(T transport);
 
     }
 }

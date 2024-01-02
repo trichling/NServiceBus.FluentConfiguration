@@ -13,8 +13,8 @@ namespace NServiceBus.FluentConfiguration.Tests
 
             var endpoint = new ConfigureNServiceBus()
                 .WithEndpoint(endpointName)
-                .WithTransport<LearningTransport>(transport => { 
-                    transport.StorageDirectory("./");
+                .WithTransport(new LearningTransport(), transport => { 
+                    transport.StorageDirectory = "./";
                 })
                 .WithRouting(routing => {
                 })

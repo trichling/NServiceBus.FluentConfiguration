@@ -3,50 +3,47 @@ using NServiceBus.Transport;
 
 namespace NServiceBus.FluentConfiguration.Core
 {
-    public class ConfigureATransport<T> : IConfigureATransport<T> where T : TransportDefinition, new()
+    public class ConfigureATransport<T> : IConfigureATransport<T> where T : TransportDefinition
     {
         private readonly IConfigureAnEndpoint configureEndpoint;
 
-        public ConfigureATransport(IConfigureAnEndpoint configureEndpoint, Action<TransportExtensions<T>> transportConfigurationAction)
+        private RoutingSettings<T> Routing;
+
+        public ConfigureATransport(IConfigureAnEndpoint configureEndpoint, T transport, Action<T> transportConfigurationAction)
         {
-            Transport = configureEndpoint.Configuration.UseTransport<T>();
-            transportConfigurationAction(Transport);
+            Routing = configureEndpoint.Configuration.UseTransport(transport);
+            transportConfigurationAction(transport);
             this.configureEndpoint = configureEndpoint;
         }
 
-        public ConfigureATransport(IConfigureAnEndpoint configureEndpoint, IDefaultTransportConfiguration<T> defaultConfiguration, Action<TransportExtensions<T>> transportConfigurationAction)
+        public ConfigureATransport(IConfigureAnEndpoint configureEndpoint, T transport, IDefaultTransportConfiguration<T> defaultConfiguration, Action<T> transportConfigurationAction)
         {
-            Transport = configureEndpoint.Configuration.UseTransport<T>();
-            defaultConfiguration.ConfigureTransport(Transport);
-            transportConfigurationAction(Transport);
+            Routing = configureEndpoint.Configuration.UseTransport(transport);
+            defaultConfiguration.ConfigureTransport(transport);
+            transportConfigurationAction(transport);
             this.configureEndpoint = configureEndpoint;
         }
-
-        public TransportExtensions<T> Transport { get; private set; }
 
         public IConfigureAnEndpoint WithRouting<TDefault>() where TDefault : IDefaultRoutingConfiguration<T>, new()
         {
-            var routing = Transport.Routing();
             var defaultConfiguration = new TDefault();
-            defaultConfiguration.ConfigureRouting(routing);
+            defaultConfiguration.ConfigureRouting(Routing);
             
             return configureEndpoint;
         }
 
         public IConfigureAnEndpoint WithRouting(Action<RoutingSettings<T>> routingConfigurationAction)
         {
-            var routing = Transport.Routing();
-            routingConfigurationAction(routing);
+            routingConfigurationAction(Routing);
 
             return configureEndpoint;
         }
 
         public IConfigureAnEndpoint WithRouting<TDefault>(Action<RoutingSettings<T>> routingConfigurationAction) where TDefault : IDefaultRoutingConfiguration<T>, new()
         {
-            var routing = Transport.Routing();
             var defaultConfiguration = new TDefault();
-            defaultConfiguration.ConfigureRouting(routing);
-            routingConfigurationAction(routing);
+            defaultConfiguration.ConfigureRouting(Routing);
+            routingConfigurationAction(Routing);
             
             return configureEndpoint;
         }

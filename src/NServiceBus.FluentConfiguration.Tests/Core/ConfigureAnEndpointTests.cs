@@ -60,16 +60,20 @@ namespace NServiceBus.FluentConfiguration.Tests
         [Fact]
         public void ConfigureAnEndpoint_WithTransport_ReturnsIConfigureATransport()
         {
-            var configureTransport = new ConfigureNServiceBus().WithEndpoint("Test").WithTransport<LearningTransport>();
+            var configureTransport = new ConfigureNServiceBus()
+                .WithEndpoint("Test")
+                .WithTransport(new LearningTransport());
 
-            Assert.IsAssignableFrom(typeof(IConfigureATransport<LearningTransport>), configureTransport);
+            Assert.IsAssignableFrom<IConfigureATransport<LearningTransport>>(configureTransport);
         }
 
         [Fact]
         public void ConfigureAnEndpoint_WithTransport_ProvidingConfigurationCallback_ConfigurationCallbackIsCalled()
         {
             var configurationCallbackCalled = false;
-            var configuconfigureTransportreEndpoint = new ConfigureNServiceBus().WithEndpoint("Test").WithTransport<LearningTransport>(cfg => { configurationCallbackCalled = true; });
+            var configuconfigureTransportreEndpoint = new ConfigureNServiceBus()
+                .WithEndpoint("Test")
+                .WithTransport(new LearningTransport(), cfg => { configurationCallbackCalled = true; });
 
             Assert.True(configurationCallbackCalled);
         }
@@ -77,7 +81,9 @@ namespace NServiceBus.FluentConfiguration.Tests
         [Fact]
         public void ConfigureNServiceBus_WithEndpoint_ProvidingDefaultConfiguration_DefaultConfigurationIsApplied()
         {
-            var configureTransport = new ConfigureNServiceBus().WithEndpoint("Test").WithTransport<LearningTransport, DefaultTransportConfiguration>();
+            var configureTransport = new ConfigureNServiceBus()
+                .WithEndpoint("Test")
+                .WithTransport<LearningTransport, DefaultTransportConfiguration>(new LearningTransport());
 
             Assert.True(DefaultTransportConfiguration.ConfigureTransportCalled);
         }
@@ -86,7 +92,9 @@ namespace NServiceBus.FluentConfiguration.Tests
         public void ConfigureNServiceBus_WithEndpoint_ProvidingDefaultConfigurationAndConfigurationCallback_DefaultConfigurationIsAppliedAndConfigurationCallbackIsCalled()
         {
             var configurationCallbackCalled = false;
-            var configureTransport = new ConfigureNServiceBus().WithEndpoint("Test").WithTransport<LearningTransport, DefaultTransportConfiguration>(cfg => { configurationCallbackCalled = true; });
+            var configureTransport = new ConfigureNServiceBus()
+                .WithEndpoint("Test")
+                .WithTransport<LearningTransport, DefaultTransportConfiguration>(new LearningTransport(), cfg => { configurationCallbackCalled = true; });
 
             Assert.True(DefaultTransportConfiguration.ConfigureTransportCalled);
             Assert.True(configurationCallbackCalled);
@@ -96,7 +104,7 @@ namespace NServiceBus.FluentConfiguration.Tests
         {
             public static bool ConfigureTransportCalled = false;
 
-            public void ConfigureTransport(TransportExtensions<LearningTransport> transport)
+            public void ConfigureTransport(LearningTransport transport)
             {
                 ConfigureTransportCalled = true;
             }
@@ -107,7 +115,7 @@ namespace NServiceBus.FluentConfiguration.Tests
         {
             var configurePersistence = new ConfigureNServiceBus().WithEndpoint("Test").WithPersistence<LearningPersistence>();
 
-            Assert.IsAssignableFrom(typeof(IConfigureAnEndpoint), configurePersistence);
+            Assert.IsAssignableFrom<IConfigureAnEndpoint>(configurePersistence);
         }
 
           [Fact]
@@ -187,7 +195,7 @@ namespace NServiceBus.FluentConfiguration.Tests
                 IsApplied = true;
                 configuration
                     .WithPersistence<LearningPersistence>()
-                    .WithTransport<LearningTransport>();
+                    .WithTransport<LearningTransport>(new LearningTransport());
             }
         }
 
@@ -216,7 +224,7 @@ namespace NServiceBus.FluentConfiguration.Tests
         {
             var manageEndpoint = new ConfigureNServiceBus().WithEndpoint("Test").ManageEndpoint();
 
-            Assert.IsAssignableFrom(typeof(IManageAnEndpoint), manageEndpoint);
+            Assert.IsAssignableFrom<IManageAnEndpoint>(manageEndpoint);
         }
 
        

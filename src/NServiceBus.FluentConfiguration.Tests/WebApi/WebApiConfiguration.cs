@@ -2,8 +2,6 @@ using System;
 using System.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using NServiceBus.FluentConfiguration.Core;
-using NServiceBus.Persistence.Sql;
-using NServiceBus.Transport.SQLServer;
 using Xunit;
 
 namespace NServiceBus.FluentConfiguration.Tests
@@ -19,8 +17,8 @@ namespace NServiceBus.FluentConfiguration.Tests
 
             services.AddNServiceBus()
                 .WithEndpoint<DefaultEndpointConfiguration>(endpointName)
-                .WithTransport<LearningTransport>(transport => { 
-                    transport.StorageDirectory("./");
+                .WithTransport<LearningTransport>(new LearningTransport(), transport => { 
+                    transport.StorageDirectory ="./";
                 })
                 .WithRouting(routing => {
                 })
@@ -38,17 +36,16 @@ namespace NServiceBus.FluentConfiguration.Tests
         [Fact]
         public void CanConfigureAnEndpointWithSqlTransportAndPersistence() 
         {
-            IServiceCollection services = new ServiceCollection(); // null; //new Microsoft.Extensions.DependencyInjection.ServiceCollection();
+            var services = new ServiceCollection(); 
 
             var endpointName = "Test";
             var schema = "mySchema";
-            var connectionString = "";
+            var connectionString = "Server=localhost;Database=nservicebus;Trusted_Connection=True;MultipleActiveResultSets=true";
 
             services.AddNServiceBus()
                 .WithEndpoint<DefaultEndpointConfiguration>(endpointName)
-                .WithTransport<SqlServerTransport, DefaultSqlServerTransportConfiguration>(transport => { 
-                    transport.DefaultSchema(schema);
-                    transport.UseSchemaForEndpoint(endpointName, endpointName);
+                .WithTransport<SqlServerTransport, DefaultSqlServerTransportConfiguration>(new SqlServerTransport(connectionString), transport => { 
+                    transport.DefaultSchema = schema;
                 })
                 .WithRouting(routing => {
                     routing.RouteToEndpoint(typeof(object), endpointName);
@@ -79,11 +76,11 @@ namespace NServiceBus.FluentConfiguration.Tests
     public class DefaultSqlServerTransportConfiguration : IDefaultTransportConfiguration<SqlServerTransport>
     {
 
-        public void ConfigureTransport(TransportExtensions<SqlServerTransport> transport)
+        public void ConfigureTransport(SqlServerTransport transport)
         {
-            transport.UseSchemaForQueue("error", "dbo");
-            transport.UseSchemaForQueue("audit", "dbo");
-            transport.Transactions(TransportTransactionMode.SendsAtomicWithReceive);
+            transport.SchemaAndCatalog.UseSchemaForQueue("error", "dbo");
+            transport.SchemaAndCatalog.UseSchemaForQueue("audit", "dbo");
+            transport.TransportTransactionMode = TransportTransactionMode.SendsAtomicWithReceive;
         }
     }
 

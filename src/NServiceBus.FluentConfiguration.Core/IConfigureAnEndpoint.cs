@@ -16,10 +16,10 @@ namespace NServiceBus.FluentConfiguration.Core
         IConfigureAnEndpoint WithConfiguration(Action<EndpointConfiguration> endpointConfigurationAction);
         IConfigureAnEndpoint WithConfiguration<TDefault>(Action<EndpointConfiguration> endpointConfigurationAction) where TDefault : IDefaultEndpointConfiguration, new();
 
-        IConfigureATransport<T> WithTransport<T>() where T : TransportDefinition, new();
-        IConfigureATransport<T> WithTransport<T, TDefault>() where T : TransportDefinition, new() where TDefault : IDefaultTransportConfiguration<T>, new();
-        IConfigureATransport<T> WithTransport<T>(Action<TransportExtensions<T>> transportConfigurationAction) where T : TransportDefinition, new();
-        IConfigureATransport<T> WithTransport<T, TDefault>(Action<TransportExtensions<T>> transportConfigurationAction) where T : TransportDefinition, new() where TDefault : IDefaultTransportConfiguration<T>, new();
+        IConfigureATransport<T> WithTransport<T>(T transport) where T : TransportDefinition;
+        IConfigureATransport<T> WithTransport<T, TDefault>(T transport) where T : TransportDefinition where TDefault : IDefaultTransportConfiguration<T>, new();
+        IConfigureATransport<T> WithTransport<T>(T transport, Action<T> transportConfigurationAction) where T : TransportDefinition;
+        IConfigureATransport<T> WithTransport<T, TDefault>(T transport, Action<T> transportConfigurationAction) where T : TransportDefinition where TDefault : IDefaultTransportConfiguration<T>, new();
 
 
         IConfigureAnEndpoint WithPersistence<T>() where T : PersistenceDefinition;

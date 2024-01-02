@@ -4,7 +4,8 @@
 
  */
 
-using System.Data.SqlClient;
+
+using Microsoft.Data.SqlClient;
 
 namespace NServiceBus.FluentConfiguration.Core.Utilities
 {

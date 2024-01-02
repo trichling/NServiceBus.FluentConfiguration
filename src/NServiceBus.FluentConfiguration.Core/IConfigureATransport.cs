@@ -4,10 +4,8 @@ using NServiceBus.Transport;
 namespace NServiceBus.FluentConfiguration.Core
 {
 
-    public interface IConfigureATransport<T> where T : TransportDefinition, new()
+    public interface IConfigureATransport<T> where T : TransportDefinition
     {
-
-        TransportExtensions<T> Transport { get;  }
 
         IConfigureAnEndpoint WithRouting<TDefault>() where TDefault : IDefaultRoutingConfiguration<T>, new();
         IConfigureAnEndpoint WithRouting(Action<RoutingSettings<T>> routingConfigurationAction);
