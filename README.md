@@ -60,10 +60,13 @@ var schema = "someNameSchema";
 
 services.AddNServiceBus()
     .WithEndpoint<DefaultEndpointConfiguration>(endpointName)
-    .WithTransport<SqlServerTransport, DefaultSqlServerTransportConfiguration>(transport => { 
-        transport.DefaultSchema(schema);
-        transport.UseSchemaForEndpoint(endpointName, endpointName);
-    })
+    .WithTransport<SqlServerTransport, DefaultSqlServerTransportConfiguration>(
+        new SqlServerTransport(connectionString),
+        transport => { 
+            transport.DefaultSchema(schema);
+            transport.UseSchemaForEndpoint(endpointName, endpointName);
+        }
+    )
     .WithRouting(routing => {
         routing.RouteToEndpoint(typeof(object), endpointName);
     })
