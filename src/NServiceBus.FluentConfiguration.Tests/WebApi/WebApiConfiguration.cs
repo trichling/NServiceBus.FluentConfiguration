@@ -9,7 +9,7 @@ namespace NServiceBus.FluentConfiguration.Tests
     public class WebApiConfiguration
     {
         [Fact]
-        public void EndpointGetsRegisteredInDIContainer() 
+        public void EndpointGetsRegisteredInDIContainer()
         {
             IServiceCollection services = new ServiceCollection(); // null; //new Microsoft.Extensions.DependencyInjection.ServiceCollection();
 
@@ -17,26 +17,30 @@ namespace NServiceBus.FluentConfiguration.Tests
 
             services.AddNServiceBus()
                 .WithEndpoint<DefaultEndpointConfiguration>(endpointName)
-                .WithTransport<LearningTransport>(new LearningTransport(), transport => { 
-                    transport.StorageDirectory ="./";
+                .WithTransport<LearningTransport>(new LearningTransport(), transport =>
+                {
+                    transport.StorageDirectory = "./";
                 })
-                .WithRouting(routing => {
+                .WithRouting(routing =>
+                {
                 })
-                .WithPersistence<LearningPersistence>(persistence => {
+                .WithPersistence<LearningPersistence>(persistence =>
+                {
                 })
+                .WithSerialization<XmlSerializer>()
                 .ManageEndpoint()
                 .Start();
 
             var serviceProvider = services.BuildServiceProvider();
             var endpoint = serviceProvider.GetService(typeof(IEndpointInstance));
-            
+
             Assert.NotNull(endpoint);
         }
 
         [Fact]
-        public void CanConfigureAnEndpointWithSqlTransportAndPersistence() 
+        public void CanConfigureAnEndpointWithSqlTransportAndPersistence()
         {
-            var services = new ServiceCollection(); 
+            var services = new ServiceCollection();
 
             var endpointName = "Test";
             var schema = "mySchema";
@@ -44,20 +48,24 @@ namespace NServiceBus.FluentConfiguration.Tests
 
             services.AddNServiceBus()
                 .WithEndpoint<DefaultEndpointConfiguration>(endpointName)
-                .WithTransport<SqlServerTransport, DefaultSqlServerTransportConfiguration>(new SqlServerTransport(connectionString), transport => { 
+                .WithTransport<SqlServerTransport, DefaultSqlServerTransportConfiguration>(new SqlServerTransport(connectionString), transport =>
+                {
                     transport.DefaultSchema = schema;
                 })
-                .WithRouting(routing => {
+                .WithRouting(routing =>
+                {
                     routing.RouteToEndpoint(typeof(object), endpointName);
                 })
-                .WithPersistence<SqlPersistence, DefaultSqlPersistenceConfiguration>(persistence => {
+                .WithPersistence<SqlPersistence, DefaultSqlPersistenceConfiguration>(persistence =>
+                {
                     var dialect = persistence.SqlDialect<SqlDialect.MsSqlServer>();
                     dialect.Schema(schema);
                     persistence.ConnectionBuilder(
-                        connectionBuilder: () => {
+                        connectionBuilder: () =>
+                        {
                             return new SqlConnection(connectionString);
                         });
-                    
+
                 });
         }
 

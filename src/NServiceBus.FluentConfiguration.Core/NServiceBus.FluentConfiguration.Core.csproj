@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <VersionPrefix>8.8.0</VersionPrefix>
+    <VersionPrefix>8.9.0</VersionPrefix>
     <Title>A fluent interface for configuring an NServiceBus endpoint. </Title>
     <Description>Provides you with a fluent interface for configuring an NServiceBus endpoint in .NET Core. It uses a class called ConfigureNServiceBus as a starting point and guides the developer through the configuration process.</Description>
     <PackageProjectUrl>https://github.com/trichling/NServiceBus.FluentConfiguration</PackageProjectUrl>
@@ -12,8 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NServiceBus" Version="8.1.6" />
-    <PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.2" />
+    <PackageReference Include="NServiceBus" Version="9.*" />
   </ItemGroup>
 
 </Project>

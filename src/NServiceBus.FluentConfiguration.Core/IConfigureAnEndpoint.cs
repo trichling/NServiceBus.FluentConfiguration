@@ -1,6 +1,7 @@
 using System;
 using NServiceBus.FluentConfiguration.Core.Profiles;
 using NServiceBus.Persistence;
+using NServiceBus.Serialization;
 using NServiceBus.Transport;
 
 namespace NServiceBus.FluentConfiguration.Core
@@ -9,7 +10,7 @@ namespace NServiceBus.FluentConfiguration.Core
     public interface IConfigureAnEndpoint
     {
 
-        EndpointConfiguration Configuration { get;  }
+        EndpointConfiguration Configuration { get; }
 
         IConfigureAnEndpoint WithConfiguration(IEndpointConfigurationProfile profile);
         IConfigureAnEndpoint WithConfiguration<TDefault>() where TDefault : IDefaultEndpointConfiguration, new();
@@ -30,6 +31,11 @@ namespace NServiceBus.FluentConfiguration.Core
         IConfigureAnEndpoint WithConventions(Action<ConventionsBuilder> conventionConfigurationAction);
         IConfigureAnEndpoint WithConventions<TDefault>() where TDefault : IDefaultConventionsConfiguration, new();
         IConfigureAnEndpoint WithConventions<TDefault>(Action<ConventionsBuilder> conventionConfigurationAction) where TDefault : IDefaultConventionsConfiguration, new();
+
+        IConfigureAnEndpoint WithSerialization<T>() where T : SerializationDefinition, new();
+        IConfigureAnEndpoint WithSerialization<T>(Action<SerializationExtensions<T>> serializationConfigurationAction) where T : SerializationDefinition, new();
+        IConfigureAnEndpoint WithSerialization<T, TDefault>() where T : SerializationDefinition, new() where TDefault : IDefaultSerializationConfiguration<T>, new();
+        IConfigureAnEndpoint WithSerialization<T, TDefault>(Action<SerializationExtensions<T>> serializationConfigurationAction) where T : SerializationDefinition, new() where TDefault : IDefaultSerializationConfiguration<T>, new();
 
         IManageAnEndpoint ManageEndpoint();
     }

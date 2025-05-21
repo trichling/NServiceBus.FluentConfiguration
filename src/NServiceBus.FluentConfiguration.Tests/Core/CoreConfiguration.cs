@@ -7,23 +7,27 @@ namespace NServiceBus.FluentConfiguration.Tests
     public class CoreConfiguration
     {
         [Fact]
-        public void CanStartSimpleEndpoint() 
+        public void CanStartSimpleEndpoint()
         {
             var endpointName = "Test";
 
             var endpoint = new ConfigureNServiceBus()
                 .WithEndpoint(endpointName)
-                .WithTransport(new LearningTransport(), transport => { 
+                .WithTransport(new LearningTransport(), transport =>
+                {
                     transport.StorageDirectory = "./";
                 })
-                .WithRouting(routing => {
+                .WithRouting(routing =>
+                {
                 })
-                .WithPersistence<LearningPersistence>(persistence => {
+                .WithPersistence<LearningPersistence>(persistence =>
+                {
                 })
+                .WithSerialization<XmlSerializer>()
                 .ManageEndpoint()
                 .Start()
                 .Instance;
-            
+
             Assert.NotNull(endpoint);
         }
     }

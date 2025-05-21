@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
-    <VersionPrefix>8.8.0</VersionPrefix>
+    <VersionPrefix>8.9.0</VersionPrefix>
     <Title>A fluent interface for configuring an NServiceBus endpoint within a .NET Core WebApi. </Title>
     <Description>Provides you with a fluent interface for configuring an NServiceBus endpoint in .NET Core WebApi. It uses IServiceCollection as a starting point and guides the developer through the configuration process.</Description>
     <PackageProjectUrl>https://github.com/trichling/NServiceBus.FluentConfiguration</PackageProjectUrl>
@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
-    <PackageReference Include="NServiceBus" Version="8.1.6" />
+    <PackageReference Include="NServiceBus" Version="9.*" />
   </ItemGroup>
 
 </Project>

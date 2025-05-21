@@ -2,6 +2,7 @@ using System.Data.SqlClient;
 using NServiceBus.FluentConfiguration.Core;
 using NServiceBus.FluentConfiguration.Core.Profiles;
 using NServiceBus.Persistence.Sql;
+using NServiceBus.Serialization;
 using Xunit;
 
 namespace NServiceBus.FluentConfiguration.Tests
@@ -15,7 +16,8 @@ namespace NServiceBus.FluentConfiguration.Tests
             DefaultEndpointConfiguration.ConfigureEndpointCalled = false;
             DefaultTransportConfiguration.ConfigureTransportCalled = false;
             DefaultPersistenceConfiguration.ConfigurePersistenceCalled = false;
-            DefaultConventinosConfiguration.ConfigurePersistenceCalled = false;
+            DefaultConventinosConfiguration.ConfigureConventionsCalled = false;
+            DefaultSerializationConfiguration.ConfigureSerializationCalled = false;
         }
 
         [Fact]
@@ -118,7 +120,7 @@ namespace NServiceBus.FluentConfiguration.Tests
             Assert.IsAssignableFrom<IConfigureAnEndpoint>(configurePersistence);
         }
 
-          [Fact]
+        [Fact]
         public void ConfigureAnEndpoint_WithPersistence_ProvidingConfigurationCallback_ConfigurationCallbackIsCalled()
         {
             var configurationCallbackCalled = false;
@@ -159,18 +161,20 @@ namespace NServiceBus.FluentConfiguration.Tests
         {
             var configurePersistence = new ConfigureNServiceBus().WithEndpoint("Test").WithConventions<DefaultConventinosConfiguration>();
 
-            Assert.True(DefaultConventinosConfiguration.ConfigurePersistenceCalled);
+            Assert.True(DefaultConventinosConfiguration.ConfigureConventionsCalled);
         }
 
         [Fact]
         public void ConfigureAnEndpoint_WithConventions_ProvidingDefaultConfigurationAndConfigurationCallback_DefaultConfigurationIsAppliedAndConfigurationCallbackIsCalled()
         {
             var configurationCallbackCalled = false;
-            var configurePersistence = new ConfigureNServiceBus().WithEndpoint("Test").WithConventions<DefaultConventinosConfiguration>(cfg => { configurationCallbackCalled = true ;});
+            var configurePersistence = new ConfigureNServiceBus().WithEndpoint("Test").WithConventions<DefaultConventinosConfiguration>(cfg => { configurationCallbackCalled = true; });
 
-            Assert.True(DefaultConventinosConfiguration.ConfigurePersistenceCalled);
+            Assert.True(DefaultConventinosConfiguration.ConfigureConventionsCalled);
             Assert.True(configurationCallbackCalled);
         }
+
+
 
         private class DefaultEndpointConfiguration : IDefaultEndpointConfiguration
         {
@@ -201,11 +205,11 @@ namespace NServiceBus.FluentConfiguration.Tests
 
         private class DefaultConventinosConfiguration : IDefaultConventionsConfiguration
         {
-            public static bool ConfigurePersistenceCalled = false;
+            public static bool ConfigureConventionsCalled = false;
 
             public void ConfigureConventions(ConventionsBuilder conventionsConfiguration)
             {
-                ConfigurePersistenceCalled = true;
+                ConfigureConventionsCalled = true;
             }
         }
 
@@ -219,6 +223,65 @@ namespace NServiceBus.FluentConfiguration.Tests
             }
         }
 
+        private class DefaultSerializationConfiguration : IDefaultSerializationConfiguration<XmlSerializer>
+        {
+            public static bool ConfigureSerializationCalled = false;
+
+            public void ConfigureSerialization(SerializationExtensions<XmlSerializer> serializationSettings)
+            {
+                ConfigureSerializationCalled = true;
+            }
+        }
+
+        [Fact]
+        public void ConfigureAnEndpoint_WithSerialization_ReturnsIConfigureAnEndpoint()
+        {
+            var configureSerialization = new ConfigureNServiceBus()
+                .WithEndpoint("Test")
+                .WithSerialization<XmlSerializer>();
+
+            Assert.IsAssignableFrom<IConfigureAnEndpoint>(configureSerialization);
+        }
+
+        [Fact]
+        public void ConfigureAnEndpoint_WithSerialization_ProvidingConfigurationCallback_ConfigurationCallbackIsCalled()
+        {
+            var configurationCallbackCalled = false;
+            var configureSerialization = new ConfigureNServiceBus()
+                .WithEndpoint("Test")
+                .WithSerialization<XmlSerializer>(cfg =>
+                {
+                    configurationCallbackCalled = true;
+                });
+
+            Assert.True(configurationCallbackCalled);
+        }
+
+        [Fact]
+        public void ConfigureAnEndpoint_WithSerialization_ProvidingDefaultConfiguration_DefaultConfigurationIsApplied()
+        {
+            var configureSerialization = new ConfigureNServiceBus()
+                .WithEndpoint("Test")
+                .WithSerialization<XmlSerializer, DefaultSerializationConfiguration>();
+
+            Assert.True(DefaultSerializationConfiguration.ConfigureSerializationCalled);
+        }
+
+        [Fact]
+        public void ConfigureAnEndpoint_WithSerialization_ProvidingDefaultConfigurationAndConfigurationCallback_DefaultConfigurationIsAppliedAndConfigurationCallbackIsCalled()
+        {
+            var configurationCallbackCalled = false;
+            var configureSerialization = new ConfigureNServiceBus()
+                .WithEndpoint("Test")
+                .WithSerialization<XmlSerializer, DefaultSerializationConfiguration>(cfg =>
+                {
+                    configurationCallbackCalled = true;
+                });
+
+            Assert.True(DefaultSerializationConfiguration.ConfigureSerializationCalled);
+            Assert.True(configurationCallbackCalled);
+        }
+
         [Fact]
         public void ConfigureEndpoint_ManageEndpoint_ReturnsIManageAnEndpoint()
         {
@@ -226,10 +289,8 @@ namespace NServiceBus.FluentConfiguration.Tests
 
             Assert.IsAssignableFrom<IManageAnEndpoint>(manageEndpoint);
         }
-
-       
     }
-  
+
 }
 
-   
+
