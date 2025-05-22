@@ -1,5 +1,5 @@
 using System;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.DependencyInjection;
 using NServiceBus.FluentConfiguration.Core;
 using Xunit;
@@ -15,18 +15,18 @@ namespace NServiceBus.FluentConfiguration.Tests
 
             var endpointName = "Test";
 
-            services.AddNServiceBus()
+            services
+                .AddNServiceBus()
                 .WithEndpoint<DefaultEndpointConfiguration>(endpointName)
-                .WithTransport<LearningTransport>(new LearningTransport(), transport =>
-                {
-                    transport.StorageDirectory = "./";
-                })
-                .WithRouting(routing =>
-                {
-                })
-                .WithPersistence<LearningPersistence>(persistence =>
-                {
-                })
+                .WithTransport<LearningTransport>(
+                    new LearningTransport(),
+                    transport =>
+                    {
+                        transport.StorageDirectory = "./";
+                    }
+                )
+                .WithRouting(routing => { })
+                .WithPersistence<LearningPersistence>(persistence => { })
                 .WithSerialization<XmlSerializer>()
                 .ManageEndpoint()
                 .Start();
@@ -44,14 +44,19 @@ namespace NServiceBus.FluentConfiguration.Tests
 
             var endpointName = "Test";
             var schema = "mySchema";
-            var connectionString = "Server=localhost;Database=nservicebus;Trusted_Connection=True;MultipleActiveResultSets=true";
+            var connectionString =
+                "Server=localhost;Database=nservicebus;Trusted_Connection=True;MultipleActiveResultSets=true";
 
-            services.AddNServiceBus()
+            services
+                .AddNServiceBus()
                 .WithEndpoint<DefaultEndpointConfiguration>(endpointName)
-                .WithTransport<SqlServerTransport, DefaultSqlServerTransportConfiguration>(new SqlServerTransport(connectionString), transport =>
-                {
-                    transport.DefaultSchema = schema;
-                })
+                .WithTransport<SqlServerTransport, DefaultSqlServerTransportConfiguration>(
+                    new SqlServerTransport(connectionString),
+                    transport =>
+                    {
+                        transport.DefaultSchema = schema;
+                    }
+                )
                 .WithRouting(routing =>
                 {
                     routing.RouteToEndpoint(typeof(object), endpointName);
@@ -60,15 +65,12 @@ namespace NServiceBus.FluentConfiguration.Tests
                 {
                     var dialect = persistence.SqlDialect<SqlDialect.MsSqlServer>();
                     dialect.Schema(schema);
-                    persistence.ConnectionBuilder(
-                        connectionBuilder: () =>
-                        {
-                            return new SqlConnection(connectionString);
-                        });
-
+                    persistence.ConnectionBuilder(connectionBuilder: () =>
+                    {
+                        return new SqlConnection(connectionString);
+                    });
                 });
         }
-
     }
 
     public class DefaultEndpointConfiguration : IDefaultEndpointConfiguration
@@ -81,9 +83,9 @@ namespace NServiceBus.FluentConfiguration.Tests
         }
     }
 
-    public class DefaultSqlServerTransportConfiguration : IDefaultTransportConfiguration<SqlServerTransport>
+    public class DefaultSqlServerTransportConfiguration
+        : IDefaultTransportConfiguration<SqlServerTransport>
     {
-
         public void ConfigureTransport(SqlServerTransport transport)
         {
             transport.SchemaAndCatalog.UseSchemaForQueue("error", "dbo");
@@ -92,7 +94,8 @@ namespace NServiceBus.FluentConfiguration.Tests
         }
     }
 
-    public class DefaultSqlPersistenceConfiguration : IDefaultPersistenceConfiguration<SqlPersistence>
+    public class DefaultSqlPersistenceConfiguration
+        : IDefaultPersistenceConfiguration<SqlPersistence>
     {
         public void ConfigurePersistence(PersistenceExtensions<SqlPersistence> persistence)
         {
